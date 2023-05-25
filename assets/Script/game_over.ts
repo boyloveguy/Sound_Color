@@ -1,4 +1,5 @@
 import GameMgr from "./public-mgr";
+import ControllerBtn from "./controller_btn";
 
 const {ccclass, property} = cc._decorator;
 
@@ -14,11 +15,16 @@ export default class GameOver extends cc.Component {
     @property(cc.AudioClip)
     gameOverAudio: cc.AudioClip = null
 
+    @property(cc.Node)
+    controller: cc.Node = null
+
+
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
 
     gameOver(){
+        cc.audioEngine.stopAll();
         this.node.active = true
         this.scorePopup.getComponent(cc.Label).string = 'Score Current: ' + GameMgr.score.toString();
         let highData = {
@@ -41,6 +47,7 @@ export default class GameOver extends cc.Component {
         this.highestPopup.getComponent(cc.Label).string = 'Highest Score: ' + getScores.highestScore.toString();
         cc.audioEngine.playMusic(this.gameOverAudio, false);
         GameMgr.getColorRandom = []
+
     }
 
     directorScene(){
