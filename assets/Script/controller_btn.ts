@@ -48,7 +48,6 @@ export default class ControllerBtn extends cc.Component {
     @property(cc.Node)
     suggestPopup: cc.Node = null
 
-    isRunRandom: boolean = true
     score: number = 0;
     i: number = 0;
     // LIFE-CYCLE CALLBACKS:
@@ -56,13 +55,13 @@ export default class ControllerBtn extends cc.Component {
     // onLoad() {}
 
     randomColorBtn() {
-        let random = Math.floor(Math.random() * (4-1)+1);
+        let random = Math.floor(Math.random() * (4 - 1) + 1);
         GameMgr.random = random
         GameMgr.getColorRandom.push(random)
     }
 
     runRandomColorBtn(colorBtns) {
-        this.isRunRandom = true
+        GameMgr.isRunRandom = true
         setTimeout(() => {
             let i = 0
             this.schedule(() => {
@@ -71,7 +70,7 @@ export default class ControllerBtn extends cc.Component {
                         this.greenBtn.getComponent(cc.Animation).play();
                         cc.audioEngine.playEffect(this.doNote, false);
                         break;
-                    case  2 :
+                    case 2:
                         this.redBtn.getComponent(cc.Animation).play();
                         cc.audioEngine.playEffect(this.reNote, false);
                         break;
@@ -89,17 +88,20 @@ export default class ControllerBtn extends cc.Component {
             }, 1, GameMgr.getColorRandom.length - 1);
 
             setTimeout(() => {
-                this.isRunRandom = false
+                GameMgr.isRunRandom = false
+                setTimeout(() => {
+                    this.suggestBtn.getComponent(cc.Animation).play();
+                }, 5000)
             }, 1000 + 1000 * GameMgr.getColorRandom.length)
         }, 1000)
     }
 
 
     gainColorBtn(node, index) {
-        if(this.isRunRandom){
+        if (GameMgr.isRunRandom) {
             return
         }
-        if(GameMgr.isShowPopup){
+        if (GameMgr.isShowPopup) {
             return
         }
         switch (index) {
@@ -149,6 +151,7 @@ export default class ControllerBtn extends cc.Component {
         this.randomColorBtn();
         this.runRandomColorBtn(GameMgr.getColorRandom);
         this.suggestPopup.getComponent(SuggestPopup).createNewBtn()
+        this.suggestBtn.getComponent(cc.Animation).stop();
         GameMgr.score = this.score;
         setTimeout(() => {
             cc.audioEngine.playEffect(this.youWinAudio, false);
@@ -170,9 +173,9 @@ export default class ControllerBtn extends cc.Component {
             this.suggestPopup.getComponent(SuggestPopup).createNewBtn()
         }
     }
-    
+
     start() {
-        
+        this.suggestBtn.getComponent(cc.Animation).stop();
         if (GameMgr.isStartGame == true) {
             this.scoreLabel.enabled = false
             this.greenBtn.active = false
@@ -185,7 +188,7 @@ export default class ControllerBtn extends cc.Component {
             cc.audioEngine.stop(cc.audioEngine.playEffect(this.miNote, false));
             cc.audioEngine.stop(cc.audioEngine.playEffect(this.faNote, false));
 
-        }else{
+        } else {
             this.startBtn.active = false
             this.scoreLabel.enabled = true
             this.greenBtn.active = true

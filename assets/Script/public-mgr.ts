@@ -5,6 +5,7 @@ export default class GameMgr {
     public static isStartGame: boolean = true
     public static isShowPopup: boolean = false
     public static random: number
+    public static isRunRandom: boolean = true
 
 
 }

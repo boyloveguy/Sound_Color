@@ -27,6 +27,9 @@ export default class SuggestPopup extends cc.Component {
     // onLoad () {}
 
     showPopup() {
+        if(GameMgr.isRunRandom){
+            return
+        }
         GameMgr.isShowPopup = true
         this.node.active = true
     }
